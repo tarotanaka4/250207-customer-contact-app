@@ -52,7 +52,7 @@ def display_initial_ai_message():
         st.warning("具体的に入力したほうが期待通りの回答を得やすいです。", icon=ct.WARNING_ICON)
 
 
-def display_conversation_log():
+def display_conversation_log(chat_message):
     """
     会話ログの一覧表示
     """
@@ -62,15 +62,15 @@ def display_conversation_log():
             with st.chat_message(message["role"], avatar=ct.AI_ICON_FILE_PATH):
                 st.markdown(message["content"])
                 # フィードバックエリアの表示
-                display_after_feedback_message(index)
+                display_after_feedback_message(index, chat_message)
         else:
             with st.chat_message(message["role"], avatar=ct.USER_ICON_FILE_PATH):
                 st.markdown(message["content"])
                 # フィードバックエリアの表示
-                display_after_feedback_message(index)
+                display_after_feedback_message(index, chat_message)
 
 
-def display_after_feedback_message(index):
+def display_after_feedback_message(index, chat_message):
     """
     ユーザーフィードバック後のメッセージ表示
 
@@ -95,6 +95,9 @@ def display_after_feedback_message(index):
             st.session_state.dissatisfied_reason = st.text_area("", label_visibility="collapsed")
             # 送信ボタンの表示
             if st.button(ct.FEEDBACK_BUTTON_LABEL):
+                # 回答への不満足理由をログファイルに出力
+                if st.session_state.dissatisfied_reason:
+                    logger.info({"dissatisfied_reason": st.session_state.dissatisfied_reason})
                 # 送信ボタン押下後、再度入力エリアが表示されないようにするのと、Thanksメッセージを表示するためにフラグを更新
                 st.session_state.feedback_no_flg = False
                 st.session_state.feedback_no_reason_send_flg = True
@@ -112,21 +115,25 @@ def display_llm_response(result):
         result: LLMからの回答
     """
     st.markdown(result)
-    # LLMによる回答表示後、フィードバックボタンを表示するためにフラグを立てる
-    st.session_state.answer_flg = True
-    st.caption(ct.FEEDBACK_REQUIRE_MESSAGE)
+    # フィードバックボタンを表示する場合のみ、メッセージ表示
+    if st.session_state.answer_flg:
+        st.caption(ct.FEEDBACK_REQUIRE_MESSAGE)
 
 
 def display_feedback_button():
     """
     フィードバックボタンの表示
     """
+    logger = logging.getLogger(ct.LOGGER_NAME)
+    
     # LLMによる回答後のみにフィードバックボタンを表示
     if st.session_state.answer_flg:
         col1, col2, col3 = st.columns([1, 1, 5])
         # 良い回答が得られたことをフィードバックするためのボタン
         with col1:
             if st.button(ct.FEEDBACK_YES):
+                # フィードバックをログファイルに出力
+                logger.info({"feedback": ct.SATISFIED})
                 # 再度フィードバックボタンが表示されないよう、フラグを下ろす
                 st.session_state.answer_flg = False
                 # 「はい」ボタンを押下後、Thanksメッセージを表示するためのフラグ立て
@@ -136,6 +143,8 @@ def display_feedback_button():
         # 回答に満足できなかったことをフィードバックするためのボタン
         with col2:
             if st.button(ct.FEEDBACK_NO):
+                # フィードバックをログファイルに出力
+                logger.info({"feedback": ct.DISSATISFIED})
                 # 再度フィードバックボタンが表示されないよう、フラグを下ろす
                 st.session_state.answer_flg = False
                 # 「はい」ボタンを押下後、フィードバックの入力エリアを表示するためのフラグ立て

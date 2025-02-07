@@ -248,8 +248,10 @@ def execute_agent_or_chain(chat_message):
 
     # AIエージェント機能を利用する場合
     if st.session_state.mode == ct.AI_AGENT_MODE_ON:
+        # LLMによる回答をストリーミング出力するためのオブジェクトを用意
+        st_callback = StreamlitCallbackHandler(st.container())
         # Agent Executorの実行（AIエージェント機能を使う場合は、Toolとして設定した関数内で会話履歴への追加処理を実施）
-        result = st.session_state.agent_executor.invoke({"input": chat_message}, {"callbacks": [st.session_state.st_callback]})
+        result = st.session_state.agent_executor.invoke({"input": chat_message}, {"callbacks": [st_callback]})
         response = result["output"]
     # AIエージェントを利用しない場合
     else:
@@ -258,5 +260,9 @@ def execute_agent_or_chain(chat_message):
         # 会話履歴への追加
         st.session_state.chat_history.extend([HumanMessage(content=chat_message), AIMessage(content=result["answer"])])
         response = result["answer"]
+
+    # LLMから参照先のデータを基にした回答が行われた場合のみ、フィードバックボタンを表示
+    if response != ct.NO_DOC_MATCH_MESSAGE:
+        st.session_state.answer_flg = True
     
     return response

@@ -30,6 +30,10 @@ SPINNER_TEXT = "回答生成中..."
 # ==========================================
 FEEDBACK_YES = "はい"
 FEEDBACK_NO = "いいえ"
+
+SATISFIED = "回答に満足した"
+DISSATISFIED = "回答に満足しなかった"
+
 FEEDBACK_REQUIRE_MESSAGE = "この回答はお役に立ちましたか？フィードバックをいただくことで、生成AIの回答の質が向上します。"
 FEEDBACK_BUTTON_LABEL = "送信"
 FEEDBACK_YES_MESSAGE = "ご満足いただけて良かったです！他にもご質問があれば、お気軽にお尋ねください！"
@@ -107,6 +111,8 @@ SEARCH_WEB_INFO_TOOL_DESCRIPTION = "自社サービス「HealthX」に関する�
 # プロンプトテンプレート
 # ==========================================
 SYSTEM_PROMPT_CREATE_INDEPENDENT_TEXT = "会話履歴と最新の入力をもとに、会話履歴なしでも理解できる独立した入力テキストを生成してください。"
+
+NO_DOC_MATCH_MESSAGE = "回答に必要な情報が見つかりませんでした。弊社に関する質問・要望を、入力内容を変えて送信してください。"
 
 SYSTEM_PROMPT_INQUIRY = """
     あなたは社内文書を基に、顧客からの問い合わせに対応するアシスタントです。

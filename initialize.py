@@ -109,8 +109,6 @@ def initialize_agent_executor():
     
     # 消費トークン数カウント用のオブジェクトを用意
     st.session_state.enc = tiktoken.get_encoding(ct.ENCODING_KIND)
-    # LLMによる回答をストリーミング出力するためのオブジェクトを用意
-    st.session_state.st_callback = StreamlitCallbackHandler(st.container())
     
     st.session_state.llm = ChatOpenAI(model_name=ct.MODEL, temperature=ct.TEMPERATURE, streaming=True)
 

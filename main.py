@@ -72,7 +72,7 @@ chat_message = st.chat_input(ct.CHAT_INPUT_HELPER_TEXT)
 # 会話ログの表示
 ############################################################
 try:
-    cn.display_conversation_log()
+    cn.display_conversation_log(chat_message)
 except Exception as e:
     logger.error(f"{ct.CONVERSATION_LOG_ERROR_MESSAGE}\n{e}")
     st.error(utils.build_error_message(ct.CONVERSATION_LOG_ERROR_MESSAGE), icon=ct.ERROR_ICON)
