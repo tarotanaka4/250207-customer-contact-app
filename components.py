@@ -26,7 +26,7 @@ def display_sidebar():
     サイドバーの表示
     """
     with st.sidebar:
-        st.markdown("## AIエージェントの利用有無")
+        st.markdown("## AIエージェント機能の利用有無")
 
         col1, col2 = st.columns([100, 1])
         with col1:
@@ -40,7 +40,7 @@ def display_sidebar():
 
         st.markdown("**【AIエージェントとは】**")
         st.code("質問に対して適切と考えられる回答を生成できるまで、生成AIロボット自身に試行錯誤してもらえる機能です。自身の回答に対して評価・改善を繰り返すことで、より優れた回答を生成できます。", wrap_lines=True)
-        st.warning("AIエージェント機能を利用する場合、回答生成により多くの時間がかかります。", icon=":material/warning:")
+        st.warning("AIエージェント機能を利用する場合、回答生成により多くの時間がかかる可能性が高いです。", icon=":material/warning:")
 
 
 def display_initial_ai_message():
@@ -125,7 +125,7 @@ def display_feedback_button():
     フィードバックボタンの表示
     """
     logger = logging.getLogger(ct.LOGGER_NAME)
-    
+
     # LLMによる回答後のみにフィードバックボタンを表示
     if st.session_state.answer_flg:
         col1, col2, col3 = st.columns([1, 1, 5])
