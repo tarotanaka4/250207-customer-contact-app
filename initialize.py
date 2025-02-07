@@ -80,6 +80,8 @@ def initialize_logger():
     """
     ログ出力の設定
     """
+    os.makedirs(ct.LOG_DIR_PATH, exist_ok=True)
+
     logger = logging.getLogger(ct.LOGGER_NAME)
 
     if logger.hasHandlers():
